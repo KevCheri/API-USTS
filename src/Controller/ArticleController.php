@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,18 +17,34 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/", name="article_index", methods={"GET"})
+     * @Route("/ajout-category-article", name="api_ajout_category_article", methods={"GET"})
+     * @param Request $request
+     * @param ArticleRepository $articleRepository
+     * @param CategoryRepository $categoryRepository
+     * @return Response
      */
-    public function addCategoryToArticle()
+    public function addCategoryToArticle(Request $request, ArticleRepository $articleRepository, CategoryRepository $categoryRepository)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $article_id = $request->query->get('article');
+        $category_id = $request->query->get('category');
+
+        $article = $articleRepository->find($article_id);
+        $category = $articleRepository->find($category_id);
+
+        $article->setCategory($category);
+        $entityManager->persist($article);
+
+        return new Response('Success');
 
     }
 
 
-
-
     /**
      * @Route("/", name="article_index", methods={"GET"})
+     * @param ArticleRepository $articleRepository
+     * @return Response
      */
     public function index(ArticleRepository $articleRepository): Response
     {
@@ -38,6 +55,8 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/new", name="article_new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -61,6 +80,8 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/{id}", name="article_show", methods={"GET"})
+     * @param Article $article
+     * @return Response
      */
     public function show(Article $article): Response
     {
@@ -71,6 +92,9 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="article_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Article $article
+     * @return Response
      */
     public function edit(Request $request, Article $article): Response
     {
@@ -91,6 +115,9 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/{id}", name="article_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Article $article
+     * @return Response
      */
     public function delete(Request $request, Article $article): Response
     {
