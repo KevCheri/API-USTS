@@ -30,11 +30,14 @@ class ArticleController extends AbstractController
         $article_id = $request->query->get('article');
         $category_id = $request->query->get('category');
 
-        $article = $articleRepository->find($article_id);
-        $category = $articleRepository->find($category_id);
+
+        $article = $articleRepository->find((int)$article_id);
+        $category = $categoryRepository->find((int)$category_id);
+
 
         $article->setCategory($category);
         $entityManager->persist($article);
+        $entityManager->flush();
 
         return new Response('Success');
 
