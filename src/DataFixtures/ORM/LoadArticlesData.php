@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures\ORM;
 
-use AppBundle\Entity\Category;
+use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Article;
+use App\Entity\Article;
 
 class LoadArticlesData extends Fixture
 {
